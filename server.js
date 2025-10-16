@@ -7,7 +7,7 @@ import cors from "cors";
 
 // utils
 import connectDB from "./config/db.js";
-import userRoutes from "./routes/userRoutes.js";
+import userRoutes from "./routes/userRoutes.js"; 
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
@@ -37,15 +37,17 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/category", categoryRoutes);
-app.use("/api/products", productRoutes); // ✅ fixed slash
+app.use("/api/products", productRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/orders", orderRoutes);
 
 // Uploads folder
 const __dirname = path.resolve();
-app.use("/uploads", express.static(path.join(__dirname + "/uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Start server
 app.listen(port, () => {
   console.log(`✅ Server running at http://localhost:${port}`);
 });
+
+
