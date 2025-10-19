@@ -7,7 +7,7 @@ import cors from "cors";
 
 // utils
 import connectDB from "./config/db.js";
-import userRoutes from "./routes/userRoutes.js"; 
+import userRoutes from "./routes/userRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
@@ -21,8 +21,13 @@ const port = process.env.PORT || 5000;
 // Connect to DB
 connectDB();
 
-// Enable CORS
-app.use(cors({ origin: "*", credentials: true }));
+// ✅ Enable CORS properly
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://tagtells-frontend.onrender.com"],
+    credentials: true,
+  })
+);
 
 // Body parser
 app.use(express.json());
@@ -49,5 +54,3 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.listen(port, () => {
   console.log(`✅ Server running at http://localhost:${port}`);
 });
-
-
