@@ -24,7 +24,7 @@ connectDB();
 // ✅ Enable CORS properly
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://tagtells-frontend.onrender.com"],
+    origin: ["http://localhost:5173", "https://tagtells-frontend-f87w.vercel.app"],
     credentials: true,
   })
 );
