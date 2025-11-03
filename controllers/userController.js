@@ -36,6 +36,8 @@ const createUser = asyncHandler(async (req, res) => {
   }
 });
 
+
+
 // Login user
 
 const loginUser = asyncHandler(async (req, res) => {
