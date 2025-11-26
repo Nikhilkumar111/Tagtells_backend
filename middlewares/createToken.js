@@ -19,7 +19,6 @@
 // export default genrateToken;
 
 
-
 import jwt from "jsonwebtoken";
 
 const createToken = (res, userId) => {
@@ -27,14 +26,14 @@ const createToken = (res, userId) => {
     expiresIn: "30d",
   });
 
-  // Set JWT as HTTP-only cookie for cross-site usage (production)
-res.cookie("jwt", token, {
-  httpOnly: true,
-  secure: true,       // MUST be true on Render
-  sameSite: "none",   // REQUIRED for Vercel <-> Render cookies
-  maxAge: 30 * 24 * 60 * 60 * 1000,
-  path: "/",
-});
+  // Set JWT as HTTP-only cookie for cross-site usage
+  res.cookie("jwt", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // true in prod (HTTPS), false in dev
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // none for cross-site in prod, lax for dev
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    path: "/",
+  });
 
   return token;
 };

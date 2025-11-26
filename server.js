@@ -21,11 +21,25 @@ const port = process.env.PORT || 5000;
 // Connect to DB
 connectDB();
 
-// ✅ Enable CORS properly
+// ✅ CORS setup for Render + Vercel frontend
+const allowedOrigins = [
+  "http://localhost:5173", 
+  "https://tagtells-frontend.vercel.app"
+];
+
 app.use(
   cors({
-    origin: ["http://localhost:5173","https://tagtells-frontend.vercel.app"],
-    credentials: true,
+    origin: (origin, callback) => {
+      // allow requests with no origin (like Postman) or from allowed origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // allow cookies
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -49,7 +63,6 @@ app.use("/api/orders", orderRoutes);
 // Uploads folder
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 
 // Start server
 app.listen(port, () => {
