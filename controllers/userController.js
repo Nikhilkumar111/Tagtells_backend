@@ -45,6 +45,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // Find user by email
   const existingUser = await User.findOne({ email });
+
+
   if (!existingUser) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
@@ -55,8 +57,12 @@ const loginUser = asyncHandler(async (req, res) => {
     return res.status(401).json({ message: "Invalid email or password" });
   }
 
+
+
   // Create JWT token in cookie
   createToken(res, existingUser._id);
+
+
 
   // Send user data
   res.status(200).json({
@@ -86,6 +92,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
   res.json(users);
 });
+
 
 const getCurrentUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);

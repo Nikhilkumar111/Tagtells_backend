@@ -20,9 +20,10 @@
 
 
 
+
 import jwt from "jsonwebtoken";
 
-const generateToken = (res, userId) => {
+const createToken = (res, userId) => {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
@@ -35,8 +36,9 @@ const generateToken = (res, userId) => {
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     path: "/", // ensure cookie sent on all routes
   });
+  console.log(token);
 
   return token;
 };
 
-export default generateToken;
+export default createToken;

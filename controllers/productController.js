@@ -3,12 +3,11 @@ import Product from "../models/porductModel.js";
 import asyncHandler from "../middlewares/asyncHandler.js";  // ✅ correct
 
 
+
 const addProduct = asyncHandler(async (req, res) => {
   try {
-    // ✅ Fix typo + add fallback
-    const { name, description, price, category, quantity, brand } = req.fields || {};
+    const { name, description, price, category, quantity, brand, image } = req.body;
 
-    // ✅ Validation
     switch (true) {
       case !name:
         return res.json({ error: "Name is required" });
@@ -22,13 +21,22 @@ const addProduct = asyncHandler(async (req, res) => {
         return res.json({ error: "Quantity is required" });
       case !brand:
         return res.json({ error: "Brand is required" });
+      case !image:
+        return res.json({ error: "Image (Cloudinary URL) is required" });
     }
 
-    // ✅ Save product
-    const product = new Product({ ...req.fields });
-    await product.save();
+    const product = new Product({
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      brand,
+      image
+    });
 
-    res.json(product);
+    await product.save();
+    res.status(201).json(product);
   } catch (error) {
     console.error(error);
     res.status(400).json({ message: error.message });
@@ -36,12 +44,13 @@ const addProduct = asyncHandler(async (req, res) => {
 });
 
 
+
 const updateProductDetails = asyncHandler(async (req, res) => {
   try {
-    const { name, description, price, category, quantity, brand } = req.fields;
+    const { name, description, price, category, quantity, brand, image } = req.body;
 
-    console.log("yha to aa rha huu mai")
-    // Validation
+    console.log("yha to aa rha huu mai");
+
     switch (true) {
       case !name:
         return res.json({ error: "Name is required" });
@@ -57,21 +66,37 @@ const updateProductDetails = asyncHandler(async (req, res) => {
         return res.json({ error: "Quantity is required" });
     }
 
+    const updateData = {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      brand
+    };
+
+    if (image) {
+      updateData.image = image;
+    }
 
     const product = await Product.findByIdAndUpdate(
       req.params.id,
-      { ...req.fields },
+      updateData,
       { new: true }
     );
 
-    await product.save();
-console.log("hii")
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    console.log("hii");
     res.json(product);
   } catch (error) {
     console.error(error);
-    res.status(400).json(error.message);
+    res.status(400).json({ message: error.message });
   }
 });
+
 
 
 

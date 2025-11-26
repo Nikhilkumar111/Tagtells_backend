@@ -50,6 +50,7 @@ app.use("/api/orders", orderRoutes);
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+
 // Start server
 app.listen(port, () => {
   console.log(`✅ Server running at http://localhost:${port}`);
