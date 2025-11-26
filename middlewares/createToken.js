@@ -28,13 +28,13 @@ const createToken = (res, userId) => {
   });
 
   // Set JWT as HTTP-only cookie for cross-site usage (production)
-  res.cookie("jwt", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // true only in production
-    sameSite: "none", // required for cross-site cookies (frontend <> backend)
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    path: "/",
-  });
+res.cookie("jwt", token, {
+  httpOnly: true,
+  secure: true,       // MUST be true on Render
+  sameSite: "none",   // REQUIRED for Vercel <-> Render cookies
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+  path: "/",
+});
 
   return token;
 };
