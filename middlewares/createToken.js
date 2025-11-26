@@ -20,7 +20,6 @@
 
 
 
-
 import jwt from "jsonwebtoken";
 
 const createToken = (res, userId) => {
@@ -28,15 +27,14 @@ const createToken = (res, userId) => {
     expiresIn: "30d",
   });
 
-  // ✅ Set JWT as HTTP-only cookie
+  // Set JWT as HTTP-only cookie for cross-site usage (production)
   res.cookie("jwt", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development", // false for localhost
-    sameSite: process.env.NODE_ENV !== "development" ? "none" : "lax", // ✅ allows frontend (5173) ↔ backend (5000)
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    path: "/", // ensure cookie sent on all routes
+    secure: process.env.NODE_ENV === "production", // true only in production
+    sameSite: "none", // required for cross-site cookies (frontend <> backend)
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    path: "/",
   });
-  console.log(token);
 
   return token;
 };
