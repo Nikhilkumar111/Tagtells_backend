@@ -28,7 +28,7 @@ import { upload } from "../middlewares/multer.middleware.js"; // ✅ Named impor
 router
   .route("/")
   .get(fetchProducts)
-  .post(authenticate, authorizeAdmin,upload.single("image"), addProduct);
+  .post(authenticate, authorizeAdmin,addProduct);
 
 router.route("/allproducts").get(fetchAllProducts);
 

@@ -158,6 +158,7 @@ const getUserById = asyncHandler(async (req, res) => {
 
   if (user) {
     res.json(user);
+    console.log("users to aa rha be ",user);
   } else {
     res.status(404);
     throw new Error("User not found");

@@ -104,18 +104,20 @@ const removeProduct = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
 
-    // ✅ Prevent CastError
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid product ID" });
-    }
+    // // ✅ Prevent CastError
+    // if (!mongoose.Types.ObjectId.isValid(id)) {
+    //   return res.status(400).json({ error: "Invalid product ID" });
+    // }
 
     const product = await Product.findByIdAndDelete(id);
 
-    if (!product) {
-      return res.status(404).json({ error: "Product not found" });
-    }
+if (!product) {
+  return res.status(404).json({ success: false, message: "Product not found" });
+}
 
-    res.json(product);
+// Return consistent success structure
+res.json({ success: true, message: `${product.name} deleted`, productId: product._id });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
@@ -170,10 +172,10 @@ const fetchProductById = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
 
-    // ✅ Prevent CastError
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid product ID" });
-    }
+    // // ✅ Prevent CastError
+    // if (!mongoose.Types.ObjectId.isValid(id)) {
+    //   return res.status(400).json({ error: "Invalid product ID" });
+    // }
 
     const product = await Product.findById(id);
 
@@ -214,9 +216,9 @@ const addProductReview = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid product ID" });
-    }
+    // if (!mongoose.Types.ObjectId.isValid(id)) {
+    //   return res.status(400).json({ error: "Invalid product ID" });
+    // }
 
     const { rating, comment } = req.body;
     const product = await Product.findById(id);

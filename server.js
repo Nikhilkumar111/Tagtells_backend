@@ -21,31 +21,30 @@ const port = process.env.PORT || 5000;
 // Connect to DB
 connectDB();
 
-// ✅ CORS setup for Render + Vercel frontend
+//  CORS setup for Render + Vercel frontend
 const allowedOrigins = [
-  "http://localhost:5173", 
-  "https://tagtells-frontend.vercel.app"
+  "http://localhost:5173",
+  "https://tagtells-frontend.vercel.app"   // added for deployment
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // allow requests with no origin (like Postman) or from allowed origins
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, // allow cookies
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 // Body parser
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" })); //  fix 413 upload error
+app.use(express.urlencoded({ extended: true, limit: "50mb" })); //  fix 413
 app.use(cookieParser());
 
 // Test route
@@ -63,6 +62,15 @@ app.use("/api/orders", orderRoutes);
 // Uploads folder
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// ⭐ Global error handler (fixes Unexpected '<' JSON parse error)
+app.use((err, req, res, next) => {
+  const status = res.statusCode === 200 ? 500 : res.statusCode;
+  res.status(status).json({
+    message: err.message,
+    stack: process.env.NODE_ENV === "production" ? null : err.stack,
+  });
+});
 
 // Start server
 app.listen(port, () => {
